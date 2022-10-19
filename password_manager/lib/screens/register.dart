@@ -66,31 +66,31 @@ class _RegisterState extends State<Register> with Validation {
                     height: 20,
                   ),
                   TextFormField(
-                      controller: passwordController,
-                      decoration: const InputDecoration(
-                          // icon: Icon(Icons.visibility_off),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                              borderSide: BorderSide.none),
-                          fillColor: Colors.white,
-                          filled: true,
-                          labelText: 'Mpin'),
-                      validator: (value) => passwordValidator(value)),
+                    controller: passwordController,
+                    decoration: const InputDecoration(
+                        // icon: Icon(Icons.visibility_off),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            borderSide: BorderSide.none),
+                        fillColor: Colors.white,
+                        filled: true,
+                        labelText: 'Mpin'),
+                    validator: (value) => checkSize(value),
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
                   TextFormField(
-                      decoration: const InputDecoration(
-                          // icon: Icon(Icons.visibility_off),
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                              borderSide: BorderSide.none),
-                          fillColor: Colors.white,
-                          filled: true,
-                          labelText: 'Re-Enter 4 digit MPin'),
-                      validator: (value) => passwordValidator(value)),
+                    decoration: const InputDecoration(
+                        // icon: Icon(Icons.visibility_off),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            borderSide: BorderSide.none),
+                        fillColor: Colors.white,
+                        filled: true,
+                        labelText: 'Re-Enter 4 digit MPin'),
+                    validator: (value) => checkSize(value),
+                  ),
                   const SizedBox(
                     height: 20,
                   ),

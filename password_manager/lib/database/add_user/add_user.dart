@@ -20,7 +20,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     if (widget.user != null) {
@@ -35,8 +34,6 @@ class _AddUserScreenState extends State<AddUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.user == null ? "Add User" : "Update User"),
       ),
       body: Padding(

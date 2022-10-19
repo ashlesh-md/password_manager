@@ -125,7 +125,11 @@ class _LoginState extends State<Login> with Validation {
                               backgroundColor: Colors.black.withOpacity(0.75),
                               textColor: Colors.white,
                             ),
-                            Navigator.pushNamed(context, SocialMedia.routeName)
+                            if (value == 'Sign In successfull')
+                              {
+                                Navigator.pushNamed(
+                                    context, SocialMedia.routeName)
+                              }
                           });
                 }
               },

@@ -192,8 +192,7 @@ class _SiteDetailsState extends State<SiteDetails> with Validation {
                                     fillColor: Colors.grey.shade200,
                                     filled: true,
                                   ),
-                                  validator: (value) =>
-                                      passwordValidator(value),
+                                  validator: (value) => checkSize(value),
                                 ),
                           const SizedBox(
                             height: 10,
@@ -299,7 +298,7 @@ class _SiteDetailsState extends State<SiteDetails> with Validation {
                               fillColor: Colors.grey.shade200,
                               filled: true,
                             ),
-                            validator: (value) => passwordValidator(value),
+                            validator: (value) => checkSize(value),
                           ),
                           const SizedBox(
                             height: 20,

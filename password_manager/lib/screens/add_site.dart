@@ -226,7 +226,7 @@ class _AddSiteState extends State<AddSite> with Validation {
                           fillColor: Colors.grey.shade200,
                           filled: true,
                           labelText: ''),
-                      validator: (value) => passwordValidator(value),
+                      validator: (value) => checkSize(value),
                     ),
                     const SizedBox(
                       height: 20,
