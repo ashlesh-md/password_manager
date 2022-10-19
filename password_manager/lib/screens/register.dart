@@ -92,40 +92,40 @@ class _RegisterState extends State<Register> with Validation {
                     validator: (value) => checkSize(value),
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 40,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 170),
+                    child: ElevatedButton(
+                      style: TextButton.styleFrom(
+                          minimumSize: const Size(175, 50),
+                          backgroundColor: Colors.white),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          DatabaseService.instance.createUser({
+                            "phone_number": phoneController.text.trim(),
+                            "password": passwordController.text.trim(),
+                          });
+                          DatabaseService.instance.getAllUser();
+                          Fluttertoast.showToast(
+                            msg: 'Sign Up Successful',
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: Colors.black.withOpacity(0.75),
+                            textColor: Colors.white,
+                          );
+                          Navigator.pushNamed(context, SocialMedia.routeName);
+                        }
+                      },
+                      child: const Text("SIGN IN",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Color.fromARGB(255, 14, 133, 255))),
+                    ),
                   ),
                 ],
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 170),
-            child: ElevatedButton(
-              style: TextButton.styleFrom(
-                  minimumSize: const Size(175, 50),
-                  backgroundColor: Colors.white),
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  DatabaseService.instance.createUser({
-                    "phone_number": phoneController.text.trim(),
-                    "password": passwordController.text.trim(),
-                  });
-                  DatabaseService.instance.getAllUser();
-                  Fluttertoast.showToast(
-                    msg: 'Sign Up Successful',
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    backgroundColor: Colors.black.withOpacity(0.75),
-                    textColor: Colors.white,
-                  );
-                  Navigator.pushNamed(context, SocialMedia.routeName);
-                }
-              },
-              child: const Text("SIGN IN",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Color.fromARGB(255, 14, 133, 255))),
             ),
           ),
         ]),
