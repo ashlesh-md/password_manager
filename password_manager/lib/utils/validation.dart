@@ -9,9 +9,22 @@ mixin Validation {
     }
   }
 
+  phoneNumberValidator(String value) {
+    if (value == null || value.isEmpty) {
+      return "Mobile-Number Required";
+    } else if (!RegExp(r'^(\+91[\-\s]?)?[0]?(91)?[789]\d{9}$')
+        .hasMatch(value)) {
+      return "Invalid Mobile-Number";
+    } else {
+      return null;
+    }
+  }
+
   passwordValidator(value) {
     if (value == null || value.isEmpty) {
       return "Password Required";
+    } else if (value.length != 4) {
+      return "MPin Length must be 4 digits";
     } else {
       return null;
     }
@@ -28,6 +41,16 @@ mixin Validation {
   regNameValidation(value) {
     if (value == null || value.isEmpty) {
       return "Name Required";
+    } else {
+      return null;
+    }
+  }
+
+  checkSize(value) {
+    if (value == null || value.isEmpty) {
+      return "Value Required";
+    } else if (value.length > 100) {
+      return "Size Exceded";
     } else {
       return null;
     }

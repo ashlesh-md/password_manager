@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:password_manager/screens/home.dart';
-import 'package:password_manager/screens/login.dart';
+import 'package:password_manager/utils/routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +19,6 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: '',
       theme: ThemeData(
         scaffoldBackgroundColor: const Color.fromARGB(255, 11, 11, 11),
       ),
@@ -34,14 +33,14 @@ class _MyAppState extends State<MyApp> {
             ])),
         child: AnimatedSplashScreen(
           backgroundColor: Colors.transparent,
-          nextScreen: const Authentication(),
+          nextScreen: const Home(),
           splash: 'assets/Images/01/logo.png',
           splashIconSize: 250,
           splashTransition: SplashTransition.fadeTransition,
           duration: 5000,
         ),
       ),
-      // routes: routes,
+      routes: routes,
     );
   }
 }

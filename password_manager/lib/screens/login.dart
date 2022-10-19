@@ -1,17 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:password_manager/database/model/user.dart';
+import 'package:password_manager/screens/social_media.dart';
 
+import '../database/database_service.dart';
 import '../utils/button.dart';
 import '../utils/routes.dart';
 import '../utils/textField.dart';
 import '../utils/validation.dart';
 
 class Login extends StatefulWidget {
+  User? user;
   @override
   State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> with Validation {
   final _formKey = GlobalKey<FormState>();
+  static String routeName = "/login";
+  bool watchable = false;
+  final phoneController = TextEditingController();
+  final passwordController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.user != null) {
+      phoneController.text = widget.user!.phone_number;
+      passwordController.text = widget.user!.password;
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +48,45 @@ class _LoginState extends State<Login> with Validation {
               key: _formKey,
               child: Column(
                 children: [
-                  MyTextField(
-                      label: 'Mobile Number',
-                      callBack: (value) => nameValidation(value)),
+                  TextFormField(
+                      controller: phoneController,
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                              borderSide: BorderSide.none),
+                          fillColor: Colors.white,
+                          filled: true,
+                          labelText: 'Mobile Number'),
+                      validator: (value) => phoneNumberValidator(value!)),
                   const SizedBox(
                     height: 20,
                   ),
-                  MyTextField(
-                    label: 'MPin',
-                    callBack: (value) => passwordValidator(value),
+                  TextFormField(
+                    validator: (value) => passwordValidator(value!),
+                    keyboardType: TextInputType.text,
+                    controller: passwordController,
+                    obscureText: !watchable,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                          borderSide: BorderSide.none),
+                      fillColor: Colors.white,
+                      filled: true,
+                      contentPadding: const EdgeInsets.all(8.0),
+                      labelText: 'Mpin',
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          watchable ? Icons.visibility : Icons.visibility_off,
+                          color: Theme.of(context).primaryColorDark,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            watchable = !watchable;
+                          });
+                        },
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -63,7 +112,21 @@ class _LoginState extends State<Login> with Validation {
                   backgroundColor: Colors.white),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  Navigator.pushNamed(context, MyRoutes.homeRoute);
+                  //
+                  print(phoneController.text);
+                  DatabaseService.instance
+                      .getUserByData(phoneController.text.trim() as String,
+                          passwordController.text.trim() as String)
+                      .then((value) => {
+                            Fluttertoast.showToast(
+                              msg: value,
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.black.withOpacity(0.75),
+                              textColor: Colors.white,
+                            ),
+                            Navigator.pushNamed(context, SocialMedia.routeName)
+                          });
                 }
               },
               child: const Text("SIGN IN",

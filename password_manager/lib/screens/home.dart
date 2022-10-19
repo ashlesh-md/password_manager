@@ -6,15 +6,18 @@ import 'package:password_manager/screens/register.dart';
 
 import 'login.dart';
 
-class Authentication extends StatefulWidget {
-  const Authentication({Key? key}) : super(key: key);
+class Home extends StatefulWidget {
+  static String routeName = "/home";
+
+  const Home({Key? key}) : super(key: key);
 
   @override
-  State<Authentication> createState() => _AuthenticationState();
+  State<Home> createState() => _HomeState();
 }
 
-class _AuthenticationState extends State<Authentication> {
+class _HomeState extends State<Home> {
   final formKey = GlobalKey<FormState>();
+
   int index = 0;
   @override
   Widget build(BuildContext context) {
