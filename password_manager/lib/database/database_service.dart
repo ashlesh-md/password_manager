@@ -44,7 +44,6 @@ class DatabaseService {
 
   Future<List<User>> getAllUser() async {
     final db = await instance.database;
-
     final result = await db.rawQuery('SELECT * FROM User');
     return result.length > 0
         ? result.map((json) => User.fromJson(json)).toList()
@@ -148,6 +147,29 @@ class DatabaseService {
     return result.length > 0
         ? result.map((json) => Site.fromJson(json)).toList()
         : [];
+  }
+
+  Future<List<Site>> getSearchData(String search) async {
+    final db = await instance.database;
+
+    final result = await db.rawQuery('SELECT * FROM Site');
+
+    print("Site is ${result}");
+    List<Site> data = result.length > 0
+        ? result.map((json) => Site.fromJson(json)).toList()
+        : [];
+    List<Site> final_data = [];
+    data.forEach((element) {
+      if (element.siteName.toLowerCase().contains(search.toLowerCase()) ||
+          element.sector.contains(search.toLowerCase()) ||
+          element.socialMedia.contains(search.toLowerCase()) ||
+          element.notes.contains(search.toLowerCase()) ||
+          element.url.contains(search.toLowerCase()) ||
+          element.username.contains(search.toLowerCase())) {
+        final_data.add(element);
+      }
+    });
+    return final_data;
   }
 
   Future createSite(Map<String, dynamic> Site) async {

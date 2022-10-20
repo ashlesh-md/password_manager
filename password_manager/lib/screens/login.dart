@@ -4,12 +4,11 @@ import 'package:password_manager/database/model/user.dart';
 import 'package:password_manager/screens/social_media.dart';
 
 import '../database/database_service.dart';
-import '../utils/button.dart';
-import '../utils/routes.dart';
-import '../utils/textField.dart';
 import '../utils/validation.dart';
 
 class Login extends StatefulWidget {
+  Function indexChange;
+  Login({required this.indexChange});
   User? user;
   @override
   State<Login> createState() => _LoginState();
@@ -68,7 +67,7 @@ class _LoginState extends State<Login> with Validation {
                     controller: passwordController,
                     obscureText: !watchable,
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5)),
                           borderSide: BorderSide.none),
                       fillColor: Colors.white,
@@ -93,11 +92,14 @@ class _LoginState extends State<Login> with Validation {
             ),
           ),
           GestureDetector(
-            child: const Padding(
+            child: Padding(
               padding: EdgeInsets.only(left: 25),
-              child: Text(
-                'Forgot your password?',
-                style: TextStyle(color: Colors.white),
+              child: GestureDetector(
+                child: const Text(
+                  'Forgot your password?',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () => widget.indexChange(),
               ),
             ),
           ),
@@ -112,7 +114,6 @@ class _LoginState extends State<Login> with Validation {
                   backgroundColor: Colors.white),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  //
                   print(phoneController.text);
                   DatabaseService.instance
                       .getUserByData(phoneController.text.trim() as String,

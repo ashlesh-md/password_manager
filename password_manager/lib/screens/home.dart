@@ -115,7 +115,14 @@ class _HomeState extends State<Home> {
                           ),
                           IndexedStack(
                             index: index,
-                            children: [Login(), Register()],
+                            children: [
+                              Login(indexChange: () {
+                                setState(() {
+                                  index = 1;
+                                });
+                              }),
+                              Register()
+                            ],
                           )
                         ],
                       ),

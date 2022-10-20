@@ -14,6 +14,7 @@ main() => runApp(MaterialApp(
 
 class SocialMedia extends StatefulWidget {
   bool _searchDetails = false;
+  bool _searchInfo = false;
   bool _dropdown = false;
   var data = DatabaseService.instance.getAllSite();
   String _drop_name = 'Social Media';
@@ -34,6 +35,7 @@ String dropdownValue = list.first;
 
 var categories = ["Social Media", "E-commerce", "Games", "Health", "Others"];
 int search = 0;
+final searchController = TextEditingController();
 
 class _SocialMediaState extends State<SocialMedia> {
   @override
@@ -84,177 +86,377 @@ class _SocialMediaState extends State<SocialMedia> {
             )
           ],
         ),
-        body: FutureBuilder(
-          future:
-              DatabaseService.instance.getDataByCategory(categories[search]),
-          builder: (
-            BuildContext context,
-            AsyncSnapshot<List<Site>> snapshot,
-          ) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            } else if (snapshot.connectionState == ConnectionState.done) {
-              if (snapshot.hasError) {
-                return Text('Error ${snapshot.error.toString()}');
-              } else if (snapshot.hasData) {
-                List<Site> data = snapshot.data!;
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      widget._searchDetails
-                          ? Container(
-                              padding: const EdgeInsets.all(10),
-                              height: 59,
-                              color: Colors.grey.shade200,
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: TextField(
-                                      onSubmitted: (value) {},
-                                      decoration: const InputDecoration(
-                                          border: InputBorder.none,
-                                          contentPadding: EdgeInsets.symmetric(
-                                              horizontal: 15),
-                                          hintText: "Type Keyword to search"),
+        body: widget._searchInfo
+            ? FutureBuilder(
+                future: DatabaseService.instance
+                    .getSearchData(searchController.text),
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<List<Site>> snapshot,
+                ) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasError) {
+                      return Text('Error ${snapshot.error.toString()}');
+                    } else if (snapshot.hasData) {
+                      List<Site> data = snapshot.data!;
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            widget._searchDetails
+                                ? Container(
+                                    padding: const EdgeInsets.all(10),
+                                    height: 59,
+                                    color: Colors.grey.shade200,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: TextField(
+                                            controller: searchController,
+                                            onSubmitted: (value) {},
+                                            decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                        horizontal: 15),
+                                                hintText:
+                                                    "Type Keyword to search"),
+                                          ),
+                                        ),
+                                        IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                widget._searchInfo =
+                                                    !widget._searchInfo;
+                                              });
+                                            },
+                                            icon: const Icon(Icons.search,
+                                                color: const Color(0xFF0E85FF)))
+                                      ],
+                                    ),
+                                  )
+                                : const SizedBox(),
+                            Stack(
+                              children: [
+                                Container(
+                                  color: Colors.transparent,
+                                  padding: const EdgeInsets.only(
+                                      bottom: 20, left: 20, right: 80, top: 15),
+                                  child: Align(
+                                    alignment: Alignment.topRight,
+                                    child: DropdownButton<String>(
+                                      alignment: Alignment.topRight,
+                                      value: dropdownValue,
+                                      icon: Container(
+                                          color: Colors.transparent,
+                                          alignment: Alignment.topRight,
+                                          child: const Icon(
+                                            Icons.arrow_drop_down_sharp,
+                                            color: Color(0xFF0E85FF),
+                                          )),
+                                      elevation: 16,
+                                      style: const TextStyle(
+                                          color: Colors.black, fontSize: 20),
+                                      onChanged: (String? value) {
+                                        // This is called when the user selects an item.
+                                        setState(() {
+                                          dropdownValue = value!;
+                                          search = categories.indexOf(value);
+                                          print('Search is ${search}');
+                                        });
+                                      },
+                                      items: list.map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        // setState(() {
+                                        //   print('Search is ${search}');
+                                        //   search = categories.indexOf(value);
+                                        // });
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
                                     ),
                                   ),
-                                  IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(Icons.search,
-                                          color: const Color(0xFF0E85FF)))
-                                ],
-                              ),
-                            )
-                          : const SizedBox(),
-                      Stack(
-                        children: [
-                          Container(
-                            color: Colors.transparent,
-                            padding: EdgeInsets.only(
-                                bottom: 20, left: 20, right: 80, top: 15),
-                            child: Align(
-                              alignment: Alignment.topRight,
-                              child: DropdownButton<String>(
-                                alignment: Alignment.topRight,
-                                value: dropdownValue,
-                                icon: Container(
-                                    color: Colors.transparent,
-                                    alignment: Alignment.topRight,
-                                    child: const Icon(
-                                      Icons.arrow_drop_down_sharp,
-                                      color: Color(0xFF0E85FF),
-                                    )),
-                                elevation: 16,
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 20),
-                                onChanged: (String? value) {
-                                  // This is called when the user selects an item.
-                                  setState(() {
-                                    dropdownValue = value!;
-                                    search = categories.indexOf(value);
-                                    print('Search is ${search}');
-                                  });
-                                },
-                                items: list.map<DropdownMenuItem<String>>(
-                                    (String value) {
-                                  // setState(() {
-                                  //   print('Search is ${search}');
-                                  //   search = categories.indexOf(value);
-                                  // });
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('Sites',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xFF3C4857),
-                                            fontSize: 30)),
-                                    Container(
-                                      height: 4,
-                                      width: 40,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                          color: const Color(0xFFFFA222)),
-                                    ),
-                                  ],
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 20),
-                                child: Row(
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Container(
-                                      height: 30,
-                                      width: 30,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15),
-                                        color: const Color(0xFF0E85FF),
+                                    Padding(
+                                      padding: const EdgeInsets.all(20),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Text('Sites',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF3C4857),
+                                                  fontSize: 30)),
+                                          Container(
+                                            height: 4,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: const Color(0xFFFFA222)),
+                                          ),
+                                        ],
                                       ),
-                                      child: Center(
-                                          child: Text(
-                                        '${snapshot.data!.length}',
-                                        style: TextStyle(color: Colors.white),
-                                      )),
                                     ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 20),
+                                      child: Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Container(
+                                            height: 30,
+                                            width: 30,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              color: const Color(0xFF0E85FF),
+                                            ),
+                                            child: Center(
+                                                child: Text(
+                                              '${snapshot.data!.length}',
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            )),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                   ],
                                 ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      data.length > 0
-                          ? Container(
-                              height: MediaQuery.of(context).size.height - 198,
-                              child: ListView.builder(
-                                  itemCount: data.length,
-                                  itemBuilder: (context, i) {
-                                    return GestureDetector(
-                                      child: SiteCard(data: data[i]),
-                                      onDoubleTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => SiteDetails(
-                                                    id: data[i].id,
-                                                  )),
-                                        );
+                              ],
+                            ),
+                            data.isNotEmpty
+                                ? Container(
+                                    height: MediaQuery.of(context).size.height -
+                                        198,
+                                    child: ListView.builder(
+                                        itemCount: data.length,
+                                        itemBuilder: (context, i) {
+                                          return GestureDetector(
+                                            child: SiteCard(data: data[i]),
+                                            onDoubleTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SiteDetails(
+                                                          id: data[i].id,
+                                                        )),
+                                              );
+                                            },
+                                          );
+                                        }),
+                                  )
+                                : const Text("nothing to show here")
+                          ],
+                        ),
+                      );
+                    } else {
+                      return const Center(child: Text('Empty data'));
+                    }
+                  } else {
+                    return Text('State: ${snapshot.connectionState}');
+                  }
+                },
+              )
+            : FutureBuilder(
+                future: DatabaseService.instance
+                    .getDataByCategory(categories[search]),
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<List<Site>> snapshot,
+                ) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasError) {
+                      return Text('Error ${snapshot.error.toString()}');
+                    } else if (snapshot.hasData) {
+                      List<Site> data = snapshot.data!;
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            widget._searchDetails
+                                ? Container(
+                                    padding: const EdgeInsets.all(10),
+                                    height: 59,
+                                    color: Colors.grey.shade200,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: TextField(
+                                            controller: searchController,
+                                            onSubmitted: (value) {},
+                                            decoration: const InputDecoration(
+                                                border: InputBorder.none,
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                        horizontal: 15),
+                                                hintText:
+                                                    "Type Keyword to search"),
+                                          ),
+                                        ),
+                                        IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                widget._searchInfo =
+                                                    !widget._searchInfo;
+                                              });
+                                            },
+                                            icon: const Icon(Icons.search,
+                                                color: const Color(0xFF0E85FF)))
+                                      ],
+                                    ),
+                                  )
+                                : const SizedBox(),
+                            Stack(
+                              children: [
+                                Container(
+                                  color: Colors.transparent,
+                                  padding: const EdgeInsets.only(
+                                      bottom: 20, left: 20, right: 80, top: 15),
+                                  child: Align(
+                                    alignment: Alignment.topRight,
+                                    child: DropdownButton<String>(
+                                      alignment: Alignment.topRight,
+                                      value: dropdownValue,
+                                      icon: Container(
+                                          color: Colors.transparent,
+                                          alignment: Alignment.topRight,
+                                          child: const Icon(
+                                            Icons.arrow_drop_down_sharp,
+                                            color: Color(0xFF0E85FF),
+                                          )),
+                                      elevation: 16,
+                                      style: const TextStyle(
+                                          color: Colors.black, fontSize: 20),
+                                      onChanged: (String? value) {
+                                        // This is called when the user selects an item.
+                                        setState(() {
+                                          dropdownValue = value!;
+                                          search = categories.indexOf(value);
+                                          print('Search is ${search}');
+                                        });
                                       },
-                                    );
-                                  }),
-                            )
-                          : const Text("nothing to show here")
-                    ],
-                  ),
-                );
-              } else {
-                return const Center(child: Text('Empty data'));
-              }
-            } else {
-              return Text('State: ${snapshot.connectionState}');
-            }
-          },
-        ));
+                                      items: list.map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        // setState(() {
+                                        //   print('Search is ${search}');
+                                        //   search = categories.indexOf(value);
+                                        // });
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(20),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Text('Sites',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(0xFF3C4857),
+                                                  fontSize: 30)),
+                                          Container(
+                                            height: 4,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                color: const Color(0xFFFFA222)),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(right: 20),
+                                      child: Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Container(
+                                            height: 30,
+                                            width: 30,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              color: const Color(0xFF0E85FF),
+                                            ),
+                                            child: Center(
+                                                child: Text(
+                                              '${snapshot.data!.length}',
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            )),
+                                          ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                            data.isNotEmpty
+                                ? Container(
+                                    height: MediaQuery.of(context).size.height -
+                                        198,
+                                    child: ListView.builder(
+                                        itemCount: data.length,
+                                        itemBuilder: (context, i) {
+                                          return GestureDetector(
+                                            child: SiteCard(data: data[i]),
+                                            onDoubleTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SiteDetails(
+                                                          id: data[i].id,
+                                                        )),
+                                              );
+                                            },
+                                          );
+                                        }),
+                                  )
+                                : const Text("nothing to show here")
+                          ],
+                        ),
+                      );
+                    } else {
+                      return const Center(child: Text('Empty data'));
+                    }
+                  } else {
+                    return Text('State: ${snapshot.connectionState}');
+                  }
+                },
+              ));
   }
 }
 
