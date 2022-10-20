@@ -1,3 +1,4 @@
+import 'package:blurry/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -5,7 +6,7 @@ import 'package:password_manager/database/database_service.dart';
 import 'package:password_manager/database/model/site.dart';
 import 'package:password_manager/screens/add_site.dart';
 import 'package:password_manager/screens/site_details.dart';
-
+import 'package:blurry/blurry.dart';
 import '../data/get_data.dart';
 
 main() => runApp(MaterialApp(
@@ -276,12 +277,24 @@ class _SocialMediaState extends State<SocialMedia> {
                                             itemBuilder: (context, i) {
                                               return GestureDetector(
                                                 child: SiteCard(data: data[i]),
-                                                onHorizontalDragStart:
-                                                    (details) {
-                                                  setState(() {
-                                                    DatabaseService.instance
-                                                        .deleteSite(data[i].id);
-                                                  });
+                                                onLongPressStart: (details) {
+                                                  Blurry.warning(
+                                                      title:
+                                                          'Delete ${data[i].siteName}',
+                                                      description:
+                                                          'Do you want to delete ${data[i].siteName}',
+                                                      confirmButtonText:
+                                                          'Confirm',
+                                                      popupHeight: 150,
+                                                      onConfirmButtonPressed:
+                                                          () {
+                                                        setState(() {
+                                                          DatabaseService
+                                                              .instance
+                                                              .deleteSite(
+                                                                  data[i].id);
+                                                        });
+                                                      });
                                                 },
                                                 onDoubleTap: () {
                                                   Navigator.push(
@@ -483,12 +496,24 @@ class _SocialMediaState extends State<SocialMedia> {
                                             itemBuilder: (context, i) {
                                               return GestureDetector(
                                                 child: SiteCard(data: data[i]),
-                                                onHorizontalDragStart:
-                                                    (details) {
-                                                  setState(() {
-                                                    DatabaseService.instance
-                                                        .deleteSite(data[i].id);
-                                                  });
+                                                onLongPressStart: (details) {
+                                                  Blurry.warning(
+                                                      title:
+                                                          'Delete ${data[i].siteName}',
+                                                      description:
+                                                          'Do you want to delete ${data[i].siteName}',
+                                                      confirmButtonText:
+                                                          'Confirm',
+                                                      popupHeight: 150,
+                                                      onConfirmButtonPressed:
+                                                          () {
+                                                        setState(() {
+                                                          DatabaseService
+                                                              .instance
+                                                              .deleteSite(
+                                                                  data[i].id);
+                                                        });
+                                                      }).show(context);
                                                 },
                                                 onDoubleTap: () {
                                                   Navigator.push(

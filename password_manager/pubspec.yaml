@@ -41,6 +41,7 @@ dependencies:
   sqflite: ^2.1.0+1
   fluttertoast: ^8.1.1
   flutter_password_strength: ^0.1.6
+  blurry: ^1.4.2
 
 dev_dependencies:
   flutter_test:
