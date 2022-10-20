@@ -521,10 +521,27 @@ class _SocialMediaState extends State<SocialMedia> {
                 height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: GestureDetector(
-                  child: const Icon(
-                    Icons.sync_sharp,
-                    size: 150,
-                    color: Colors.grey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Text(
+                        'Data sync in progress',
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 22,
+                            decoration: TextDecoration.none),
+                      ),
+                      Text('please wait',
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 22,
+                              decoration: TextDecoration.none)),
+                      Icon(
+                        Icons.sync_sharp,
+                        size: 150,
+                        color: Colors.grey,
+                      ),
+                    ],
                   ),
                   onTap: () {
                     setState(() {
@@ -533,7 +550,7 @@ class _SocialMediaState extends State<SocialMedia> {
                   },
                 ),
               )
-            : SizedBox(),
+            : const SizedBox(),
       ],
     );
   }
@@ -656,7 +673,7 @@ class _SiteCardState extends State<SiteCard> {
           Text(
             '${widget.data.url}',
             style: TextStyle(
-              color: const Color(0xFF3C4857).withOpacity(0.8),
+              color: const Color(0xFF3C4857).withOpacity(0.5),
               fontSize: 15.5,
               fontWeight: FontWeight.w500,
             ),

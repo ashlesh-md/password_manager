@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:password_manager/database/database_service.dart';
 import 'package:password_manager/database/model/user.dart';
+import 'package:password_manager/screens/home.dart';
 import 'package:password_manager/screens/social_media.dart';
 import '../utils/validation.dart';
 
@@ -75,7 +76,6 @@ class _RegisterState extends State<Register> with Validation {
                   ),
                   TextFormField(
                     decoration: const InputDecoration(
-                        // icon: Icon(Icons.visibility_off),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(5)),
                             borderSide: BorderSide.none),
@@ -107,7 +107,10 @@ class _RegisterState extends State<Register> with Validation {
                             backgroundColor: Colors.black.withOpacity(0.75),
                             textColor: Colors.white,
                           );
-                          Navigator.pushNamed(context, SocialMedia.routeName);
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => Home()),
+                          );
                         }
                       },
                       child: const Text("SIGN IN",
