@@ -33,7 +33,7 @@ class _AddSiteState extends State<AddSite> with Validation {
       appBar: AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [const Text("Add Site"), const Text("Edit")],
+          children: const [Text("Add Site"), Text("Edit")],
         ),
       ),
       body: SingleChildScrollView(

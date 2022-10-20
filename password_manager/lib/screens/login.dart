@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:password_manager/database/model/user.dart';
 import 'package:password_manager/screens/social_media.dart';
-
 import '../database/database_service.dart';
 import '../utils/validation.dart';
 

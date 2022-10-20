@@ -5,6 +5,7 @@ import 'package:password_manager/screens/social_media.dart';
 import 'package:password_manager/utils/validation.dart';
 import '../database/model/site.dart';
 import '../utils/site_text_field.dart';
+import 'package:flutter_password_strength/flutter_password_strength.dart';
 
 main() => MaterialApp(home: SiteDetails(id: 1));
 
@@ -33,6 +34,13 @@ class _SiteDetailsState extends State<SiteDetails> with Validation {
   final _formKey = GlobalKey<FormState>();
   FocusNode searchFocusNode = FocusNode();
   FocusNode textFieldFocusNode = FocusNode();
+  List<String> apps = [
+    "Facebook",
+    "Youtube",
+    "Twitter",
+    "Instagram"
+        "Pintrest"
+  ];
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: DatabaseService.instance.getSite(widget.id),
@@ -179,7 +187,9 @@ class _SiteDetailsState extends State<SiteDetails> with Validation {
                                       child: Text("Others"),
                                     ),
                                   ],
-                                  onChanged: (int? value) {},
+                                  onChanged: (int? value) {
+                                    SectorController = categories[value ?? 0];
+                                  },
                                 ))
                               : TextFormField(
                                   enabled: isEditable,
@@ -238,7 +248,9 @@ class _SiteDetailsState extends State<SiteDetails> with Validation {
                                       child: Text("Pintrest"),
                                     ),
                                   ],
-                                  onChanged: (int? value) {},
+                                  onChanged: (int? value) {
+                                    SocialMediaController = apps[value ?? 0];
+                                  },
                                 ))
                               : TextFormField(
                                   enabled: isEditable,
@@ -300,6 +312,9 @@ class _SiteDetailsState extends State<SiteDetails> with Validation {
                             ),
                             validator: (value) => checkSize(value),
                           ),
+                          !isEditable
+                              ? getIndicator(PasswordController.text)
+                              : SizedBox(),
                           const SizedBox(
                             height: 20,
                           ),
@@ -332,18 +347,18 @@ class _SiteDetailsState extends State<SiteDetails> with Validation {
                       ? GestureDetector(
                           onTap: () {
                             DatabaseService.instance.updateSite({
-                              "id": widget.id,
-                              "url": UrlController.text.trim(),
-                              "siteName": SiteNameController.text.trim(),
-                              "sector": SectorController.trim(),
-                              "socialMedia": mediaController,
-                              "username": UserNameController.text.trim(),
-                              "password": PasswordController.text.trim(),
-                              "notes": NotesController.text.trim(),
+                              "id": snapshot.data!.id,
+                              "url": UrlController.text,
+                              "siteName": SiteNameController.text,
+                              "sector": SectorController,
+                              "socialMedia": SocialMediaController,
+                              "username": UserNameController.text,
+                              "password": PasswordController.text,
+                              "notes": NotesController.text,
                             });
                             DatabaseService.instance.getAllSite();
                             Navigator.pushNamed(context, SocialMedia.routeName);
-                            print('ID is ${widget.id}');
+                            print('ID is ${snapshot.data!.id}');
                           },
                           child: Container(
                             color: const Color.fromARGB(255, 14, 133, 255),
@@ -371,4 +386,27 @@ class _SiteDetailsState extends State<SiteDetails> with Validation {
       },
     );
   }
+}
+
+getIndicator(String password) {
+  double val = 0;
+  if (password.length > 10) {
+    val = 1;
+  } else if (password.length > 6) {
+    val = 0.5;
+  } else {
+    val = 0.3;
+  }
+  return Container(
+    height: 7,
+    child: LinearProgressIndicator(
+      value: val,
+      color: val == 1
+          ? Colors.green
+          : val == 0.5
+              ? Colors.yellow
+              : Colors.red,
+      backgroundColor: Colors.grey,
+    ),
+  );
 }

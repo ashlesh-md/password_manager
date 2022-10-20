@@ -58,6 +58,15 @@ class DatabaseService {
     return result.map((json) => User.fromJson(json)).toList()[0];
   }
 
+  Future<User> getIdOfUser(String phone, String mpin) async {
+    final db = await instance.database;
+
+    final result = await db.rawQuery(
+        'SELECT * FROM User WHERE phone_number="${phone}" AND password="${mpin}"');
+
+    return result.map((json) => User.fromJson(json)).toList()[0];
+  }
+
   Future getUserByData(String mobileNumber, String mPin) async {
     final db = await instance.database;
     final result = await db.rawQuery(

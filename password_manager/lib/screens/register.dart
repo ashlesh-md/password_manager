@@ -2,12 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:password_manager/database/database_service.dart';
 import 'package:password_manager/database/model/user.dart';
-import 'package:password_manager/screens/site_details.dart';
 import 'package:password_manager/screens/social_media.dart';
-
-import '../utils/button.dart';
-import '../utils/routes.dart';
-import '../utils/textField.dart';
 import '../utils/validation.dart';
 
 class Register extends StatefulWidget {
@@ -24,13 +19,11 @@ class _RegisterState extends State<Register> with Validation {
   final passwordController = TextEditingController();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     if (widget.user != null) {
       phoneController.text = widget.user!.phone_number;
       passwordController.text = widget.user!.password;
-
       setState(() {});
     }
   }
